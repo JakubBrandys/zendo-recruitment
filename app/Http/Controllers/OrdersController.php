@@ -15,6 +15,10 @@ class OrdersController extends Controller
         $validated = $request->validated();
         $orders = Order::query();
 
+        if (!empty($validated['min_total'])) {
+            $orders->where('total_amount', '>=', $validated['min_total']);
+        }
+
         if (!empty($validated['search'])) {
             $orders->where(function ($query) use ($validated) {
                 $query->where('order_number', 'like', '%' . $validated['search'] . '%');
